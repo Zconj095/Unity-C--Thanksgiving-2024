@@ -1,3 +1,5 @@
+using System;
+
 public class PulseBuilder : IDisposable
 {
     public void StartNewSchedule(string name) { }

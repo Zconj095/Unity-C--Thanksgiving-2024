@@ -29,13 +29,13 @@ public class SamplerV2
     public int? Seed => _seed;
     public Options Options => _options;
 
-    public PrimitiveJob<PrimitiveResult<SamplerPubResult>> Run(IEnumerable<SamplerPub> pubs, int? shots = null)
+    public PrimitiveJob Run(IEnumerable<SamplerPub> pubs, int? shots = null)
     {
         shots ??= _defaultShots;
         var coercedPubs = pubs.Select(pub => SamplerPub.Coerce(pub, shots.Value)).ToList();
         ValidatePubs(coercedPubs);
 
-        var job = new PrimitiveJob<PrimitiveResult<SamplerPubResult>>(() => RunPubs(coercedPubs));
+        var job = new PrimitiveJob(() => RunPubs(coercedPubs));
         job.Submit();
         return job;
     }
@@ -52,7 +52,7 @@ public class SamplerV2
         }
     }
 
-    private PrimitiveResult<SamplerPubResult> RunPubs(List<SamplerPub> pubs)
+    private PrimitiveResult RunPubs(List<SamplerPub> pubs)
     {
         var pubDict = pubs.GroupBy(pub => pub.Shots).ToDictionary(g => g.Key, g => g.ToList());
         var results = new SamplerPubResult[pubs.Count];
@@ -70,7 +70,7 @@ public class SamplerV2
             }
         }
 
-        return new PrimitiveResult<SamplerPubResult>(results, new Dictionary<string, object> { { "version", 2 } });
+        return new PrimitiveResult(results, new Dictionary<string, object> { { "version", 2 } });
     }
 
     private List<SamplerPubResult> ExecutePubs(List<SamplerPub> pubs, int shots)

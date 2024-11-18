@@ -135,16 +135,6 @@ public abstract class QuantumState
     }
 }
 
-// Define the operator class (minimal version for evolution and expectation value calculations)
-public class Operator
-{
-    public Complex[,] Data { get; }
-
-    public Operator(Complex[,] data)
-    {
-        Data = data;
-    }
-}
 
 // Define the base operator class (can be expanded)
 public class BaseOperator
@@ -154,65 +144,5 @@ public class BaseOperator
     public BaseOperator(Complex[,] data)
     {
         Data = data;
-    }
-}
-
-// Define a complex number structure (if you don't use the built-in complex type)
-public struct Complex
-{
-    public double Real { get; set; }
-    public double Imaginary { get; set; }
-
-    public Complex(double real, double imaginary)
-    {
-        Real = real;
-        Imaginary = imaginary;
-    }
-
-    // Conjugate of a complex number
-    public static Complex Conjugate(Complex complex)
-    {
-        return new Complex(complex.Real, -complex.Imaginary);
-    }
-
-    // Multiply two complex numbers
-    public static Complex operator *(Complex a, Complex b)
-    {
-        return new Complex(a.Real * b.Real - a.Imaginary * b.Imaginary, a.Real * b.Imaginary + a.Imaginary * b.Real);
-    }
-
-    // Addition of two complex numbers
-    public static Complex operator +(Complex a, Complex b)
-    {
-        return new Complex(a.Real + b.Real, a.Imaginary + b.Imaginary);
-    }
-
-    // Multiply a complex number by a scalar
-    public static Complex operator *(Complex a, double scalar)
-    {
-        return new Complex(a.Real * scalar, a.Imaginary * scalar);
-    }
-
-    // Convert a complex number to a string
-    public override string ToString()
-    {
-        return $"{Real} + {Imaginary}i";
-    }
-}
-
-// Define the OpShape class (for dimensionality of the quantum state)
-public class OpShape
-{
-    public int[] Shape { get; set; }
-    public int NumQubits => (int)Math.Log2(Shape[0]);
-
-    public OpShape(int[] shape)
-    {
-        Shape = shape;
-    }
-
-    public int[] DimsL()
-    {
-        return Shape;
     }
 }

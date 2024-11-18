@@ -1,27 +1,26 @@
 using System;
 using System.Linq;
-using System.Numerics;
 using System.Collections.Generic;
 
 public class Statevector : QuantumState
 {
-    private Complex[] _data;
-    
-    public Statevector(Complex[] data, int[] dims = null)
+    private ComplexNumber[] _data;
+    private OpShape _opShape;
+
+    public Statevector(ComplexNumber[] data, int[] dims = null)
     {
         if (data == null || data.Length == 0)
             throw new ArgumentException("Invalid input data format for Statevector");
 
         _data = data;
         _opShape = new OpShape(dims);
-        
-        // Check if the input is a valid column-vector or 1D vector
+
         if (_data.Length == 1) return; // It's already a vector
         if (_data.Length > 1 && dims != null && dims.Length == 1)
             _data = _data.Take(dims[0]).ToArray();
     }
 
-    public Complex[] Data => _data;
+    public ComplexNumber[] Data => _data;
 
     public int Dim => _opShape.Shape[0];
 
@@ -35,7 +34,7 @@ public class Statevector : QuantumState
 
     public override QuantumState ToOperator()
     {
-        var mat = new Complex[Dim, Dim];
+        var mat = new ComplexNumber[Dim, Dim];
         for (int i = 0; i < Dim; i++)
         {
             mat[i, i] = _data[i];
@@ -45,7 +44,7 @@ public class Statevector : QuantumState
 
     public override QuantumState Conjugate()
     {
-        return new Statevector(_data.Select(d => Complex.Conjugate(d)).ToArray(), _opShape.Dims());
+        return new Statevector(_data.Select(d => ComplexNumber.Conjugate(d)).ToArray(), _opShape.Dims());
     }
 
     public override double Trace()
@@ -64,7 +63,7 @@ public class Statevector : QuantumState
         if (otherState == null)
             throw new InvalidOperationException("Tensor product can only be performed with another Statevector");
 
-        var resultData = new Complex[_data.Length * otherState.Data.Length];
+        var resultData = new ComplexNumber[_data.Length * otherState.Data.Length];
         for (int i = 0; i < _data.Length; i++)
         {
             for (int j = 0; j < otherState.Data.Length; j++)
@@ -83,7 +82,7 @@ public class Statevector : QuantumState
 
     public QuantumState Evolve(Operator oper, List<int> qargs = null)
     {
-        var resultData = new Complex[oper.Dims[0]];
+        var resultData = new ComplexNumber[oper.Dims[0]];
         for (int i = 0; i < oper.Dims[0]; i++)
         {
             resultData[i] = _data.Select((data, index) => data * oper.Data[i, index]).Sum();
@@ -91,13 +90,28 @@ public class Statevector : QuantumState
         return new Statevector(resultData, _opShape.Dims());
     }
 
-    public double ExpectationValue(BaseOperator oper, List<int> qargs = null)
+    public override double ExpectationValue(BaseOperator oper, List<int> qargs = null)
     {
-        // Assuming baseOperator implements .Data and .Dims properties
-        return _data.Select((data, i) => data * oper.Data[i]).Sum().Real;
+        // Ensure the operator and quantum state dimensions are compatible
+        if (oper.Dims.Length != this.Dim)
+        {
+            throw new InvalidOperationException("Operator dimensions do not match the state vector dimensions.");
+        }
+
+        double expectationValue = 0.0;
+        for (int i = 0; i < this.Dim; i++)
+        {
+            for (int j = 0; j < this.Dim; j++)
+            {
+                expectationValue += _data[i].Real * oper.Data[i, j].Real - _data[i].Imaginary * oper.Data[i, j].Imaginary; // Real part
+                expectationValue += _data[i].Real * oper.Data[i, j].Imaginary + _data[i].Imaginary * oper.Data[i, j].Real; // Imaginary part
+            }
+        }
+
+        return expectationValue;
     }
 
-    public double[] Probabilities(List<int> qargs = null, int? decimals = null)
+    public override double[] Probabilities(List<int> qargs = null, int? decimals = null)
     {
         var probs = _data.Select(d => d.Magnitude * d.Magnitude).ToArray();
         if (decimals.HasValue)
@@ -120,6 +134,6 @@ public class Statevector : QuantumState
 
     public override string ToString()
     {
-        return $"Statevector({string.Join(", ", _data.Select(d => d.ToString("G")))}), dims={string.Join(", ", _opShape.Dims())}";
+        return $"Statevector({string.Join(", ", _data.Select(d => d.ToString()))}), dims={string.Join(", ", _opShape.Dims())}";
     }
 }

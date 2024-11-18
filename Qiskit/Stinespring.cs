@@ -4,7 +4,7 @@ using System.Linq;
 
 public class Stinespring
 {
-    private Tuple<Complex[,]?, Complex[,]?> _data;
+    private Tuple<Complex[,], Complex[,]> _data;
     private OpShape _opShape;
 
     public Stinespring(object data, Tuple<int, int>? inputDims = null, Tuple<int, int>? outputDims = null)
@@ -23,7 +23,8 @@ public class Stinespring
                 _data = new Tuple<Complex[,], Complex[,]>(matrix, null);
             }
 
-            var (dimLeft, dimRight) = _data.Item1.GetLength(0), _data.Item1.GetLength(1);
+            var dimLeft = _data.Item1.GetLength(0);
+            var dimRight = _data.Item1.GetLength(1);
             int inputDim = dimRight;
             int outputDim = outputDims?.Item1 ?? inputDim;
 

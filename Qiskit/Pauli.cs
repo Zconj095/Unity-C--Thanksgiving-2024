@@ -64,9 +64,14 @@ public class Pauli : BasePauli
         _x = new bool[1, baseX.Length];
         _phase = new int[1] { basePhase };
 
-        _z[0, :] = baseZ;
-        _x[0, :] = baseX;
+        // Use full index syntax for assignment
+        for (int i = 0; i < baseZ.Length; i++)
+        {
+            _z[0, i] = baseZ[i];
+            _x[0, i] = baseX[i];
+        }
     }
+
 
     // Pauli string truncation based on MaxTruncate length
     public override string ToString()

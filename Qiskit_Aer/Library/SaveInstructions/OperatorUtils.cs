@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System;
-public class OperatorUtils
+using System.Linq;
+
+public class AerOperatorUtils
 {
     /// <summary>
     /// Convert operator to SparsePauliOp parameters for saving.

@@ -121,9 +121,11 @@ public class SparsePauliOp
         var x2 = other.Paulis.X;
         var z2 = other.Paulis.Z;
 
-        // Further compose logic here, similar to Python version but using list operations
+        // Compose logic here: create a new PauliList based on composition and return the result
+        var composedPauliList = _pauliList.Compose(other.Paulis, qargs, front);
+        var newCoeffs = _coeffs.Zip(other.Coeffs, (c1, c2) => c1 * c2).ToArray();
 
-        return new SparsePauliOp(/* Constructed PauliList */, /* New Coeffs */);
+        return new SparsePauliOp(composedPauliList, newCoeffs);
     }
 
     public SparsePauliOp Multiply(Complex scalar)
@@ -149,94 +151,5 @@ public class SparsePauliOp
         }
 
         return new SparsePauliOp(combinedPauliList, combinedCoeffs.ToArray());
-    }
-}
-
-public class PauliList
-{
-    private List<string> _pauliStrings;
-
-    public PauliList(object data, bool copy = true)
-    {
-        _pauliStrings = new List<string>(); // Initialize with appropriate data
-    }
-
-    public int Size => _pauliStrings.Count;
-
-    public List<string> ToLabels() => _pauliStrings;
-
-    public PauliList Copy()
-    {
-        return new PauliList(_pauliStrings.ToList());
-    }
-
-    public int CountY()
-    {
-        return _pauliStrings.Count(p => p.Contains("Y"));
-    }
-
-    public int Phase { get; set; }
-
-    public int[] X => _pauliStrings.Select(p => p.Contains("X") ? 1 : 0).ToArray();
-    public int[] Z => _pauliStrings.Select(p => p.Contains("Z") ? 1 : 0).ToArray();
-
-    public bool Equals(PauliList other)
-    {
-        return _pauliStrings.SequenceEqual(other._pauliStrings);
-    }
-
-    public void Add(PauliList other)
-    {
-        _pauliStrings.AddRange(other._pauliStrings);
-    }
-
-    public void Add(string pauli)
-    {
-        _pauliStrings.Add(pauli);
-    }
-}
-
-public struct Complex
-{
-    public static readonly Complex One = new Complex(1, 0);
-    public static readonly Complex ImaginaryOne = new Complex(0, 1);
-    
-    public double Real { get; set; }
-    public double Imaginary { get; set; }
-
-    public Complex(double real, double imaginary)
-    {
-        Real = real;
-        Imaginary = imaginary;
-    }
-
-    public static Complex Pow(Complex value, double exponent)
-    {
-        double magnitude = Math.Pow(Math.Sqrt(value.Real * value.Real + value.Imaginary * value.Imaginary), exponent);
-        double angle = Math.Atan2(value.Imaginary, value.Real) * exponent;
-        return new Complex(magnitude * Math.Cos(angle), magnitude * Math.Sin(angle));
-    }
-
-    public static Complex operator *(Complex left, Complex right)
-    {
-        return new Complex(
-            left.Real * right.Real - left.Imaginary * right.Imaginary,
-            left.Real * right.Imaginary + left.Imaginary * right.Real
-        );
-    }
-
-    public static Complex operator *(Complex left, double right)
-    {
-        return new Complex(left.Real * right, left.Imaginary * right);
-    }
-
-    public static Complex operator +(Complex left, Complex right)
-    {
-        return new Complex(left.Real + right.Real, left.Imaginary + right.Imaginary);
-    }
-
-    public static Complex Conjugate(Complex value)
-    {
-        return new Complex(value.Real, -value.Imaginary);
     }
 }

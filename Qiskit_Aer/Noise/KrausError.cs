@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class KrausError
 {
-    public static QuantumError KrausError(List<Matrix> noiseOps, bool canonicalKraus = false)
+    public static QuantumError KrausErrorCall(List<Matrix> noiseOps, bool canonicalKraus = false)
     {
         if (noiseOps == null || noiseOps.Count == 0)
         {

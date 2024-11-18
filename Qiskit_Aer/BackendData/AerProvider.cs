@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class AerProvider
+public class BackendAerProvider
 {
     // Static variable to store backends
     private static List<AerProviderBackend> _BACKENDS = null;
@@ -116,7 +116,7 @@ public class AerProvider
     // Override ToString
     public override string ToString()
     {
-        return "AerProvider";
+        return "BackendAerProvider";
     }
 }
 

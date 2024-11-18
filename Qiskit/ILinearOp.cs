@@ -26,8 +26,8 @@ public class MatrixOperator : ILinearOp
         throw new InvalidOperationException("Unsupported operation");
     }
 
-    // This can be expanded for other necessary operations
-    public static MatrixOperator operator @(MatrixOperator left, MatrixOperator right)
+    // Overload the multiplication operator (use * for matrix multiplication)
+    public static MatrixOperator operator *(MatrixOperator left, MatrixOperator right)
     {
         return new MatrixOperator(left.matrix * right.matrix);
     }
@@ -41,6 +41,16 @@ public static class OperatorUtils
         ILinearOp ab = a.Multiply(b);
         ILinearOp ba = b.Multiply(a);
 
-        return ab.Multiply(new MatrixOperator(Matrix4x4.identity)) + ba.Multiply(new MatrixOperator(Matrix4x4.identity));
+        // Ensure ab and ba are MatrixOperator objects
+        if (ab is MatrixOperator abMatrix && ba is MatrixOperator baMatrix)
+        {
+            // Perform the matrix addition after multiplying with identity matrix
+            var identityMatrix = new MatrixOperator(Matrix4x4.identity);
+            var resultAB = abMatrix.Multiply(identityMatrix);
+            var resultBA = baMatrix.Multiply(identityMatrix);
+            return new MatrixOperator(resultAB.Matrix + resultBA.Matrix);
+        }
+
+        throw new InvalidOperationException("Invalid matrix types in anti-commutator.");
     }
 }

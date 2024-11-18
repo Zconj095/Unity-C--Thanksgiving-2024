@@ -3,6 +3,27 @@ using System.Collections.Generic;
 
 public class RunConfig
 {
+    private Dictionary<string, object> properties;
+
+    public RunConfig(Dictionary<string, object> initialProperties)
+    {
+        properties = initialProperties;
+    }
+
+    public bool HasProperty(string propertyName)
+    {
+        return properties.ContainsKey(propertyName);
+    }
+
+    public object GetProperty(string propertyName)
+    {
+        return properties.ContainsKey(propertyName) ? properties[propertyName] : null;
+    }
+
+    public Dictionary<string, object> ToDict()
+    {
+        return new Dictionary<string, object>(properties);
+    }
     /// <summary>
     /// Number of shots for the execution.
     /// </summary>

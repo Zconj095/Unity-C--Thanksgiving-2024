@@ -8,7 +8,7 @@ public class Optimize1qGatesSimpleCommutation : TransformationPass
     private Optimize1qGatesDecomposition _optimize1q;
     private bool _runToCompletion;
 
-    private static readonly Dictionary<Type, (List<string> Precommute, List<string> Postcommute)> commutationTable = new Dictionary<Type, (List<string>, List<string)>
+    private static readonly Dictionary<Type, (List<string> Precommute, List<string> Postcommute)> commutationTable = new Dictionary<Type, (List<string>, List<string>)>
     {
         { typeof(RZXGate), (new List<string> { "rz", "p" }, new List<string> { "x", "sx", "rx" }) },
         { typeof(CXGate), (new List<string> { "rz", "p" }, new List<string> { "x", "sx", "rx" }) },
@@ -127,7 +127,7 @@ public class Optimize1qGatesSimpleCommutation : TransformationPass
             var commutedPreceding = new List<DAGOpNode>();
             if (precedingBlocker.Any())
             {
-                commutedPreceding, runClone = CommuteThrough(precedingBlocker.First(), runClone);
+                (commutedPreceding, runClone) = CommuteThrough(precedingBlocker.First(), runClone);
             }
 
             // Find and commute with succeeding run
@@ -135,7 +135,7 @@ public class Optimize1qGatesSimpleCommutation : TransformationPass
             var commutedSucceeding = new List<DAGOpNode>();
             if (succeedingBlocker.Any())
             {
-                runClone, commutedSucceeding = CommuteThrough(succeedingBlocker.First(), runClone, front: false);
+                (runClone, commutedSucceeding) = CommuteThrough(succeedingBlocker.First(), runClone, front: false);
             }
 
             // Resynthesize and check for optimization

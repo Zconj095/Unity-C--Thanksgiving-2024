@@ -27,7 +27,7 @@ public class EchoRZXWeylDecomposition : TransformationPass
     {
         // Create the circuit for the echoed RZX with the given theta value
         var rzxDag = new DAGCircuit();
-        var qr = new QuantumRegister(2);
+        var qr = new QuantumRegister();
         rzxDag.AddQreg(qr);
         rzxDag.ApplyOperationBack(new RZXGate(theta / 2), new List<Qubit> { qr[0], qr[1] });
         rzxDag.ApplyOperationBack(new XGate(), new List<Qubit> { qr[0] });
@@ -41,7 +41,7 @@ public class EchoRZXWeylDecomposition : TransformationPass
     {
         // Create the circuit for the reverse echoed RZX with the given theta value
         var reverseRzxDag = new DAGCircuit();
-        var qr = new QuantumRegister(2);
+        var qr = new QuantumRegister();
         reverseRzxDag.AddQreg(qr);
         reverseRzxDag.ApplyOperationBack(new HGate(), new List<Qubit> { qr[0] });
         reverseRzxDag.ApplyOperationBack(new HGate(), new List<Qubit> { qr[1] });
@@ -55,7 +55,8 @@ public class EchoRZXWeylDecomposition : TransformationPass
         return reverseRzxDag;
     }
 
-    public DAGCircuit Run(DAGCircuit dag)
+    // Override the Run method to provide custom transformation logic for EchoRZXWeylDecomposition
+    public override DAGCircuit Run(DAGCircuit dag)
     {
         if (dag.Qregs.Count > 1)
         {
@@ -64,7 +65,7 @@ public class EchoRZXWeylDecomposition : TransformationPass
         }
 
         var trivialLayout = Layout.GenerateTrivialLayout(dag.Qregs.Values.ToArray());
-        var decomposer = new TwoQubitControlledUDecomposer(new RZXGate());
+        var decomposer = new TwoQubitControlledUDecomposer(new RZXGate(0));
 
         foreach (var node in dag.TwoQubitOps())
         {

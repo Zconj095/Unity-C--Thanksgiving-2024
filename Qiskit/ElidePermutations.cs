@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ElidePermutations : TransformationPass
 {
-    public override object Run(object dag)
+    // Override the Run method to match the base class signature: DAGCircuit
+    public override DAGCircuit Run(DAGCircuit dag)
     {
         // Check if layout is already set
         if (propertySet.ContainsKey("layout") && propertySet["layout"] != null)

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class QuantumInstance
+public class AquaQuantumInstance
 {
     // Configuration constants
     private static readonly string[] BACKEND_CONFIG = { "basis_gates", "coupling_map" };
@@ -28,7 +28,7 @@ public class QuantumInstance
     private float _timeTaken = 0f;
 
     // Constructor
-    public QuantumInstance(
+    public AquaQuantumInstance(
         object backend,
         int shots = 1024,
         int maxCredits = 10,

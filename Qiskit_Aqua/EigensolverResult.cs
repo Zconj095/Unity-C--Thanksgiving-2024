@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class EigensolverResult
+public class AquaEigensolverResult
 {
     /// <summary>
     /// Eigenvalues computed by the solver.
@@ -19,12 +19,12 @@ public class EigensolverResult
     public double[] AuxOperatorEigenvalues { get; set; }
 
     /// <summary>
-    /// Constructs a new EigensolverResult from a dictionary.
+    /// Constructs a new AquaEigensolverResult from a dictionary.
     /// </summary>
     /// <param name="data">The dictionary containing result data.</param>
-    public static EigensolverResult FromDictionary(Dictionary<string, object> data)
+    public static AquaEigensolverResult FromDictionary(Dictionary<string, object> data)
     {
-        var result = new EigensolverResult
+        var result = new AquaEigensolverResult
         {
             Eigenvalues = data.ContainsKey("eigenvalues") ? (double[])data["eigenvalues"] : null,
             Eigenstates = data.ContainsKey("eigenstates") ? (double[][])data["eigenstates"] : null,

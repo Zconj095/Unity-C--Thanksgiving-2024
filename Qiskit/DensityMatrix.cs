@@ -107,7 +107,7 @@ public class DensityMatrix
         return new List<Complex> { new Complex(1, 0), new Complex(0, 1) }; // Dummy eigenvalues for demonstration
     }
 
-    public DensityMatrix Conjugate()
+    public virtual DensityMatrix Conjugate()
     {
         var conjugatedData = new Complex[_data.GetLength(0), _data.GetLength(1)];
         for (int i = 0; i < _data.GetLength(0); i++)
@@ -174,22 +174,4 @@ public class DensityMatrix
         }
         throw new ArgumentException("Invalid label");
     }
-}
-
-public struct Complex
-{
-    public double Real;
-    public double Imaginary;
-
-    public Complex(double real, double imaginary)
-    {
-        Real = real;
-        Imaginary = imaginary;
-    }
-
-    public static Complex Conjugate(Complex c) => new Complex(c.Real, -c.Imaginary);
-
-    public static Complex operator +(Complex a, Complex b) => new Complex(a.Real + b.Real, a.Imaginary + b.Imaginary);
-    public static Complex operator *(Complex a, Complex b) => new Complex(a.Real * b.Real - a.Imaginary * b.Imaginary,
-                                                                          a.Real * b.Imaginary + a.Imaginary * b.Real);
 }

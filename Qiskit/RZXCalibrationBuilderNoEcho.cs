@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 public class RZXCalibrationBuilderNoEcho : RZXCalibrationBuilder
 {
     public RZXCalibrationBuilderNoEcho(InstructionScheduleMap instructionScheduleMap, bool verbose = true, Target target = null)

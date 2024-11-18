@@ -61,35 +61,3 @@ public class BlockSplitter
     }
 }
 
-public static List<List<DAGOpNode>> SplitBlockIntoLayers(List<DAGOpNode> block)
-{
-    var bitDepths = new Dictionary<Bit, int>();
-    var layers = new List<List<DAGOpNode>>();
-
-    foreach (var node in block)
-    {
-        var curBits = new HashSet<Bit>(node.Qargs);
-        curBits.UnionWith(node.Cargs);
-
-        var cond = node.Op.GetCondition();
-        if (cond != null)
-        {
-            curBits.UnionWith(ConditionResources(cond).Clbits);
-        }
-
-        var curDepth = curBits.Max(bit => bitDepths.GetValueOrDefault(bit, 0));
-
-        while (layers.Count <= curDepth)
-        {
-            layers.Add(new List<DAGOpNode>());
-        }
-
-        foreach (var bit in curBits)
-        {
-            bitDepths[bit] = curDepth + 1;
-        }
-        layers[curDepth].Add(node);
-    }
-
-    return layers;
-}

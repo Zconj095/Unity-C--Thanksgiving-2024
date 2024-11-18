@@ -131,13 +131,15 @@ public static class InstructionChecker
     }
 }
 
-// Placeholder classes for missing context
 public class Experiment
 {
+    // List of instructions in the experiment
     public List<Instruction> Instructions { get; set; }
+
+    // Constructor to initialize the instructions list
+    public Experiment()
+    {
+        Instructions = new List<Instruction>();
+    }
 }
 
-public class Instruction
-{
-    public string Name { get; set; }
-}

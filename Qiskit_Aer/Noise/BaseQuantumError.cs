@@ -1,71 +1,74 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public class BaseQuantumError : BaseOperator
 {
     private readonly string _id;
 
+    // Constructor initializes the base class and generates a unique ID
     public BaseQuantumError(int numQubits) : base(numQubits)
     {
-        // Unique ID for BaseQuantumError
         _id = Guid.NewGuid().ToString("N");
     }
 
+    public string Id => _id;
+
+    // Override ToString method to display the error information
     public override string ToString()
     {
         return $"<{GetType().Name}[{Id}]>";
     }
 
-
+    // Override GetHashCode method for unique identification
     public override int GetHashCode()
     {
         return _id.GetHashCode();
     }
 
-    public string Id => _id;
-
-    public BaseQuantumError Copy()
+    // Copy method to return a deep copy of the error
+    public virtual BaseQuantumError Copy()
     {
-        // Deep copy implementation (shallow copy shown here as an example)
         return (BaseQuantumError)this.MemberwiseClone();
     }
 
-    public QuantumChannelInstruction ToInstruction()
+    // Virtual Ideal method to be overridden in derived classes
+    public virtual bool Ideal()
     {
-        return new QuantumChannelInstruction(this);
+        // Default behavior (return false or true depending on your design)
+        return false; // Assuming the base quantum error is not ideal by default
     }
 
-    public virtual bool IsIdeal()
-    {
-        throw new NotImplementedException("Ideal check must be implemented in derived classes.");
-    }
-
+    // Placeholder method to convert to a quantum channel
     public virtual SuperOp ToQuantumChannel()
     {
         throw new NotImplementedException("Conversion to SuperOp must be implemented in derived classes.");
     }
 
+    // Method to convert the error to a dictionary for serialization
     public virtual Dictionary<string, object> ToDict()
     {
         throw new NotImplementedException("Serialization to dictionary must be implemented in derived classes.");
     }
 
+    // Method to compose the quantum error with another
     public virtual BaseQuantumError Compose(BaseQuantumError other, List<int> qargs = null, bool front = false)
     {
         throw new NotImplementedException("Compose must be implemented in derived classes.");
     }
 
+    // Method to tensor the quantum error with another
     public virtual BaseQuantumError Tensor(BaseQuantumError other)
     {
         throw new NotImplementedException("Tensor must be implemented in derived classes.");
     }
 
+    // Expand method that defaults to tensor composition
     public virtual BaseQuantumError Expand(BaseQuantumError other)
     {
         return other.Tensor(this);
     }
 
+    // Operator overloads for unsupported operations (these should throw exceptions)
     public static BaseQuantumError operator *(double scalar, BaseQuantumError error)
     {
         throw new NotSupportedException($"{nameof(BaseQuantumError)} does not support scalar multiplication.");
@@ -91,24 +94,3 @@ public class BaseQuantumError : BaseOperator
         throw new NotSupportedException($"{nameof(BaseQuantumError)} does not support negation.");
     }
 }
-
-public class QuantumChannelInstruction : Instruction
-{
-    private readonly BaseQuantumError _quantumError;
-
-    public QuantumChannelInstruction(BaseQuantumError quantumError) 
-        : base("quantum_channel", quantumError.NumQubits, 0, new List<object>())
-    {
-        _quantumError = quantumError;
-    }
-
-    public override void Define()
-    {
-        var qRegister = new QuantumRegister(NumQubits, "q");
-        var quantumCircuit = new QuantumCircuit(qRegister, Name);
-        quantumCircuit.Append(new Kraus(_quantumError).ToInstruction(), qRegister, null);
-        Definition = quantumCircuit;
-    }
-}
-
-// Assuming required classes like BaseOperator, Instruction, QuantumRegister, QuantumCircuit, SuperOp, and Kraus are defined.

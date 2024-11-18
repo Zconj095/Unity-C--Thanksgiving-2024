@@ -40,14 +40,18 @@ public class NoiseError : System.Exception
 // Base class for quantum errors
 public abstract class NoiseBaseQuantumError
 {
-    public abstract int NumQubits { get; }
+    // Mark NumQubits with a protected setter so derived classes can override it
+    public virtual int NumQubits { get; protected set; }
+
     public abstract bool IsIdeal();
     public abstract NoiseBaseQuantumError Compose(NoiseBaseQuantumError other);
 }
 
+
 // Quantum error class
 public class NoiseQuantumError : NoiseBaseQuantumError
 {
+    // Override the NumQubits property with a protected setter
     public override int NumQubits { get; protected set; }
 
     public NoiseQuantumError(object error)

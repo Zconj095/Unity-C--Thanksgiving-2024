@@ -1,6 +1,16 @@
 using System;
 using System.Collections.Generic;
 
+
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public class TrivialRecurseAttribute : Attribute
+{
+    public TrivialRecurseAttribute()
+    {
+    }
+}
+
+
 public class CommutativeCancellation : TransformationPass
 {
     private readonly HashSet<string> _basis;
@@ -44,8 +54,16 @@ public class CommutativeCancellation : TransformationPass
     [TrivialRecurse]
     public override DAGCircuit Run(DAGCircuit dag)
     {
-        // Call the commutation cancellation logic
-        CommutationCancellation.CancelCommutations(dag, _commutationChecker, _basis);
+        // Call the commutation cancellation logic recursively
+        // Let's simulate that the recursion checks whether the DAG needs to be simplified more.
+        bool simplified = CommutationCancellation.CancelCommutations(dag, _commutationChecker, _basis);
+
+        // If the DAG was simplified, we recurse again.
+        if (simplified)
+        {
+            return Run(dag);  // Recursive call if changes are made
+        }
+
         return dag;
     }
 }

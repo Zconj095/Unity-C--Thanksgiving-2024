@@ -14,7 +14,7 @@ public class DAGDependencyV2
     private Dictionary<Qubit, BitLocations> _qubitIndices;
     private Dictionary<Clbit, BitLocations> _clbitIndices;
     private double _globalPhase;
-    private Dictionary<string, Dictionary<Tuple, Schedule>> _calibrations;
+    private Dictionary<string, Dictionary<Tuple<int[], object[]>, Schedule>> _calibrations;  // Use Tuple<int[], object[]>
     private Dictionary<string, int> _opNames;
     public double Duration { get; set; }
     public string Unit { get; set; }
@@ -32,7 +32,7 @@ public class DAGDependencyV2
         _qubitIndices = new Dictionary<Qubit, BitLocations>();
         _clbitIndices = new Dictionary<Clbit, BitLocations>();
         _globalPhase = 0.0;
-        _calibrations = new Dictionary<string, Dictionary<Tuple, Schedule>>();
+        _calibrations = new Dictionary<string, Dictionary<Tuple<int[], object[]>, Schedule>>();  // Update the type here
         _opNames = new Dictionary<string, int>();
         Duration = 0;
         Unit = "dt";
@@ -48,10 +48,10 @@ public class DAGDependencyV2
         }
     }
 
-    public Dictionary<string, Dictionary<Tuple, Schedule>> Calibrations
+    public Dictionary<string, Dictionary<Tuple<int[], object[]>, Schedule>> Calibrations
     {
-        get => new Dictionary<string, Dictionary<Tuple, Schedule>>(_calibrations);
-        set => _calibrations = new Dictionary<string, Dictionary<Tuple, Schedule>>(value);
+        get => new Dictionary<string, Dictionary<Tuple<int[], object[]>, Schedule>>(_calibrations);
+        set => _calibrations = new Dictionary<string, Dictionary<Tuple<int[], object[]>, Schedule>>(value);
     }
 
     public void AddCalibration(string gate, List<int> qubits, Schedule schedule, List<object> paramsList = null)
@@ -65,7 +65,11 @@ public class DAGDependencyV2
             paramsList = new List<object>();
         }
 
-        _calibrations[gate] = new Dictionary<Tuple, Schedule> { { Tuple.Create(qubits.ToArray(), paramsList.ToArray()), schedule } };
+        // Update the key to Tuple<int[], object[]>
+        _calibrations[gate] = new Dictionary<Tuple<int[], object[]>, Schedule>
+        {
+            { Tuple.Create(qubits.ToArray(), paramsList.ToArray()), schedule }
+        };
     }
 
     public bool HasCalibrationFor(DAGOpNode node)
@@ -74,6 +78,8 @@ public class DAGDependencyV2
         var paramsList = node.Op.Params.Select(p => p is ParameterExpression ? (object)Convert.ToDouble(p) : p).ToArray();
         return _calibrations.ContainsKey(node.Op.Name) && _calibrations[node.Op.Name].ContainsKey(Tuple.Create(qubits, paramsList));
     }
+
+
 
     public int Size()
     {

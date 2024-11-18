@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class Zero:
+public class Zero
 {
     private int _numQubits;
 

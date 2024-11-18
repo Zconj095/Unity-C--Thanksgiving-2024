@@ -1,8 +1,105 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+
+public class Qobj
+{
+    public class PulseQobj
+    {
+        public List<PulseQobjExperiment> Experiments { get; set; }
+        public int QobjId { get; set; }
+        public QobjHeader Header { get; set; }
+        public PulseQobjConfig Config { get; set; }
+
+        public PulseQobj(List<PulseQobjExperiment> experiments, int qobjId, QobjHeader header, PulseQobjConfig config)
+        {
+            Experiments = experiments;
+            QobjId = qobjId;
+            Header = header;
+            Config = config;
+        }
+    }
+
+    public class QobjHeader
+    {
+        public int MemorySlots { get; set; }
+        public string Name { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
+
+        public QobjHeader(int memorySlots, string name, Dictionary<string, object> metadata)
+        {
+            MemorySlots = memorySlots;
+            Name = name;
+            Metadata = metadata;
+        }
+    }
+
+    public class PulseQobjExperiment
+    {
+        public QobjExperimentHeader Header { get; set; }
+        public List<PulseQobjInstruction> Instructions { get; set; }
+        public QobjExperimentConfig Config { get; set; }
+
+        public PulseQobjExperiment(QobjExperimentHeader header, List<PulseQobjInstruction> instructions)
+        {
+            Header = header;
+            Instructions = instructions;
+        }
+    }
+
+    public class PulseQobjInstruction
+    {
+        public string Name { get; set; }
+        public List<int> Qubits { get; set; }
+        public List<int> Memory { get; set; }
+        public int Conditional { get; set; }
+
+        public PulseQobjInstruction(string name)
+        {
+            Name = name;
+            Qubits = new List<int>();
+            Memory = new List<int>();
+        }
+    }
+
+    public class QobjExperimentHeader
+    {
+        public int MemorySlots { get; set; }
+        public string Name { get; set; }
+        public Dictionary<string, object> Metadata { get; set; }
+
+        public QobjExperimentHeader(int memorySlots, string name, Dictionary<string, object> metadata)
+        {
+            MemorySlots = memorySlots;
+            Name = name;
+            Metadata = metadata;
+        }
+    }
+
+    public class QobjExperimentConfig
+    {
+        public Dictionary<string, object> Config { get; set; }
+
+        public QobjExperimentConfig(Dictionary<string, object> config)
+        {
+            Config = config;
+        }
+    }
+
+    public class PulseQobjConfig
+    {
+        public Dictionary<string, object> Config { get; set; }
+
+        public PulseQobjConfig(Dictionary<string, object> config)
+        {
+            Config = config;
+        }
+    }
+}
 
 public class AssembleSchedules
 {
-    public static Qobj.PulseQobj AssembleSchedules(
+    public static Qobj.PulseQobj AssembleQobjSchedules(
         List<object> schedules, // Equivalent to List[Union[ScheduleBlock, ScheduleComponent, Tuple[int, ScheduleComponent]]]
         int qobjId,
         Qobj.QobjHeader qobjHeader,
@@ -24,7 +121,7 @@ public class AssembleSchedules
 
         return new Qobj.PulseQobj(
             experiments: experiments,
-            qobj_id: qobjId,
+            qobjId: qobjId,
             header: qobjHeader,
             config: qobjConfig
         );
@@ -74,8 +171,6 @@ public class AssembleSchedules
             );
             if (freqConfigs.Any())
             {
-                // This handles the cases where one frequency setting applies to all experiments and
-                // where each experiment has a different frequency
                 var freqIdx = freqConfigs.Count == 1 ? 0 : idx;
                 experiment.Config = freqConfigs[freqIdx];
             }
@@ -83,7 +178,6 @@ public class AssembleSchedules
             experiments.Add(experiment);
         }
 
-        // Handle frequency sweep
         if (freqConfigs.Any() && experiments.Count == 1)
         {
             var experiment = experiments[0];

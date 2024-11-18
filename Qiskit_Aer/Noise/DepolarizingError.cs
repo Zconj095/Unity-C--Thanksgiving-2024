@@ -4,7 +4,7 @@ using System.Linq;
 
 public class DepolarizingError
 {
-    public static QuantumError DepolarizingError(double param, int numQubits)
+    public static QuantumError DepolarizingErrorCall(double param, int numQubits)
     {
         if (numQubits < 1)
         {

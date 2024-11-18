@@ -40,29 +40,33 @@ public class GroupMixin
         GroupMixin result = this;
         for (int i = 1; i < n; i++)
         {
-            result = result.Dot(this);
+            result = result.Compose(this);
         }
 
         return result;
     }
 
     // Operator overloads
-    public static GroupMixin operator &(GroupMixin left, GroupMixin right)
+    // Use '*' for Compose
+    public static GroupMixin operator *(GroupMixin left, GroupMixin right)
     {
         return left.Compose(right);
     }
 
-    public static GroupMixin operator @(GroupMixin left, GroupMixin right)
+    // Use '&' for Dot
+    public static GroupMixin operator &(GroupMixin left, GroupMixin right)
     {
         return left.Dot(right);
     }
 
+    // Use '^' for Tensor
     public static GroupMixin operator ^(GroupMixin left, GroupMixin right)
     {
         return left.Tensor(right);
     }
 
-    public static GroupMixin operator **(GroupMixin left, int right)
+    // Overload '^' for Power with int
+    public static GroupMixin operator ^(GroupMixin left, int right)
     {
         return left.Power(right);
     }

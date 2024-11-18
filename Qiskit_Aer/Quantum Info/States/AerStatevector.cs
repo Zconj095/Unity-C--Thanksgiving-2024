@@ -60,9 +60,11 @@ public class AerStatevector : Statevector
         return (Dictionary<string, object>)_result;
     }
 
-    public override AerStatevector Conjugate()
+    // Override the Conjugate method to return QuantumState, as expected by the base class
+    public override QuantumState Conjugate()
     {
-        return new AerStatevector(ConjugateVector(Data), dims: Dims);
+        // Conjugate the state and return it as QuantumState
+        return new AerStatevector(ConjugateVector(Data), dims: Dims); // Return type is now QuantumState
     }
 
     public List<string> SampleMemory(int shots, int[] qargs = null)

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class AerDensityMatrix : DensityMatrix
 {
@@ -60,10 +59,20 @@ public class AerDensityMatrix : DensityMatrix
         return (Dictionary<string, object>)_result;
     }
 
-    public override AerDensityMatrix Conjugate()
+    // Overriding Conjugate from DensityMatrix
+    public override DensityMatrix Conjugate()
     {
-        return new AerDensityMatrix(ConjugateMatrix(Data), dims: Dims);
+        if (Data is Complex[] data)
+        {
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = Complex.Conjugate(data[i]);
+            }
+            return new AerDensityMatrix(data, dims: Dims); // Return an instance of AerDensityMatrix
+        }
+        throw new InvalidOperationException("Unsupported data type for conjugation in AerDensityMatrix.");
     }
+
 
     public AerDensityMatrix Tensor(AerDensityMatrix other)
     {
@@ -133,37 +142,59 @@ public class AerDensityMatrix : DensityMatrix
 
     private static object TensorProduct(object matrix1, object matrix2)
     {
-        // Implementation of tensor product for matrices
-        throw new NotImplementedException();
+        // Implement the logic for tensor product of matrices
+        Complex[] result = new Complex[((Complex[])matrix1).Length * ((Complex[])matrix2).Length];
+        int index = 0;
+        for (int i = 0; i < ((Complex[])matrix1).Length; i++)
+        {
+            for (int j = 0; j < ((Complex[])matrix2).Length; j++)
+            {
+                result[index++] = ((Complex[])matrix1)[i] * ((Complex[])matrix2)[j];
+            }
+        }
+        return result;
     }
 
     private static object AddMatrices(object matrix1, object matrix2)
     {
-        // Implementation for matrix addition
-        throw new NotImplementedException();
+        // Add matrices
+        Complex[] mat1 = (Complex[])matrix1;
+        Complex[] mat2 = (Complex[])matrix2;
+        if (mat1.Length != mat2.Length)
+        {
+            throw new InvalidOperationException("Matrix sizes must match for addition");
+        }
+        Complex[] result = new Complex[mat1.Length];
+        for (int i = 0; i < mat1.Length; i++)
+        {
+            result[i] = mat1[i] + mat2[i];
+        }
+        return result;
     }
 
     private static void ValidateDimsCompatibility(int[] dims1, int[] dims2)
     {
-        // Validate dimension compatibility for operations
-        throw new NotImplementedException();
+        if (dims1.Length != dims2.Length)
+        {
+            throw new InvalidOperationException("Dimension mismatch between matrices");
+        }
+        for (int i = 0; i < dims1.Length; i++)
+        {
+            if (dims1[i] != dims2[i])
+            {
+                throw new InvalidOperationException("Dimension sizes do not match between matrices");
+            }
+        }
     }
 
     private static object CombineDims(int[] dims1, int[] dims2)
     {
-        // Combine dimensions for tensor operations
-        throw new NotImplementedException();
-    }
-
-    private static object ConjugateMatrix(object matrix)
-    {
-        // Implementation for conjugating a matrix
-        throw new NotImplementedException();
+        return dims1.Concat(dims2).ToArray();
     }
 
     private static object ConvertToDensityMatrix(List<Complex> data)
     {
-        // Convert 1D statevector to density matrix
-        throw new NotImplementedException();
+        // Convert list of complex numbers into a density matrix
+        return data.ToArray();
     }
 }

@@ -7,6 +7,7 @@ public class PauliLindbladError : BaseQuantumError
     private readonly List<Pauli> _generators;
     private readonly List<double> _rates;
 
+    // Constructor
     public PauliLindbladError(List<Pauli> generators, List<double> rates) : base(generators.First().NumQubits)
     {
         if (generators.Count != rates.Count)
@@ -16,11 +17,13 @@ public class PauliLindbladError : BaseQuantumError
         _rates = new List<double>(rates);
     }
 
+    // ToString method to represent the Pauli Lindblad error
     public override string ToString()
     {
         return $"{GetType().Name}({string.Join(", ", _generators)}, {string.Join(", ", _rates)})";
     }
 
+    // Equals method for comparing two PauliLindbladError objects
     public override bool Equals(object obj)
     {
         if (obj is not PauliLindbladError other) return false;
@@ -28,22 +31,27 @@ public class PauliLindbladError : BaseQuantumError
         return _rates.SequenceEqual(other._rates);
     }
 
+    // GetHashCode method to get a unique hash code
     public override int GetHashCode()
     {
         return _generators.GetHashCode() ^ _rates.GetHashCode();
     }
 
+    // Property for the size (number of generators)
     public int Size => _generators.Count;
 
+    // Properties for generators and rates
     public List<Pauli> Generators => new List<Pauli>(_generators);
-
     public List<double> Rates => new List<double>(_rates);
 
+    // Override Ideal method to check if the error is ideal
     public override bool Ideal()
     {
+        // Check if all rates are near zero or generators are identity operations
         return _rates.All(rate => Math.Abs(rate) < 1e-8) || _generators.All(gen => gen.IsIdentity());
     }
 
+    // Other methods for the PauliLindbladError class
     public bool IsCPTP(double atol = 1e-8)
     {
         return IsCP(atol);

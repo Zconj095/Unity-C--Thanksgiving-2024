@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class VarFormBased:
+public class VarFormBased
 {
     // Fields for the variational form and its parameters
     private QuantumCircuit _varForm;

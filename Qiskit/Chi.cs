@@ -1,30 +1,29 @@
 using System;
-using System.Linq;
-using System.Numerics;
+using System.Collections.Generic;
 
-public class Chi : QuantumChannel
+public class QiskitChi : QuantumChannel
 {
-    // Properties for the Chi-matrix data and dimensions
-    public Complex[,] Data { get; set; }
+    // Properties for the QiskitChi-matrix data and dimensions
+    public CustomComplex[,] Data { get; set; }
     public int NumQubits { get; set; }
     public int InputDim { get; set; }
     public int OutputDim { get; set; }
 
-    // Constructor for Chi class
-    public Chi(object data, Tuple<int, int> inputDims = null, Tuple<int, int> outputDims = null)
+    // Constructor for QiskitChi class
+    public QiskitChi(object data, Tuple<int, int> inputDims = null, Tuple<int, int> outputDims = null)
     {
-        Complex[,] chiMat = null;
+        CustomComplex[,] chiMat = null;
         int inputDim = 0;
         int outputDim = 0;
 
-        if (data is Complex[,])
+        if (data is CustomComplex[,])
         {
-            chiMat = (Complex[,])data;
+            chiMat = (CustomComplex[,])data;
             int dimL = chiMat.GetLength(0);
             int dimR = chiMat.GetLength(1);
             if (dimL != dimR)
             {
-                throw new ArgumentException("Invalid Chi-matrix input.");
+                throw new ArgumentException("Invalid QiskitChi-matrix input.");
             }
             inputDim = inputDims != null ? inputDims.Item1 : (int)Math.Sqrt(dimL);
             outputDim = outputDims != null ? outputDims.Item1 : inputDim;
@@ -35,11 +34,11 @@ public class Chi : QuantumChannel
             var superOp = new SuperOp(data);  // Assuming SuperOp is another class
             inputDim = superOp.InputDims();
             outputDim = superOp.OutputDims();
-            chiMat = ToChi(superOp);  // Assuming ToChi is a helper function to get Chi-matrix
+            chiMat = ToChi(superOp);  // Assuming ToChi is a helper function to get QiskitChi-matrix
         }
         else
         {
-            throw new ArgumentException("Invalid data type for Chi-matrix initialization.");
+            throw new ArgumentException("Invalid data type for QiskitChi-matrix initialization.");
         }
 
         if (inputDims == null)
@@ -55,7 +54,7 @@ public class Chi : QuantumChannel
         int numQubits = (int)Math.Log(inputDim, 2);
         if (Math.Pow(2, numQubits) != inputDim || inputDim != outputDim)
         {
-            throw new ArgumentException("Input is not an n-qubit Chi matrix.");
+            throw new ArgumentException("Input is not an n-qubit QiskitChi matrix.");
         }
 
         this.Data = chiMat;
@@ -64,17 +63,17 @@ public class Chi : QuantumChannel
         this.OutputDim = outputDim;
     }
 
-    // Convert to Chi matrix from SuperOp or other representation
-    private Complex[,] ToChi(SuperOp superOp)
+    // Convert to QiskitChi matrix from SuperOp or other representation
+    private CustomComplex[,] ToChi(SuperOp superOp)
     {
-        // Convert SuperOp to Chi matrix
+        // Convert SuperOp to QiskitChi matrix
         return superOp.GetData();
     }
 
     // Array conversion method
-    public Complex[,] ToArray()
+    public CustomComplex[,] ToArray()
     {
-        return (Complex[,])this.Data.Clone();
+        return (CustomComplex[,])this.Data.Clone();
     }
 
     // Methods for quantum channel evolution
@@ -84,50 +83,50 @@ public class Chi : QuantumChannel
     }
 
     // BaseOperator methods
-    public Chi Conjugate()
+    public QiskitChi Conjugate()
     {
         var choi = new Choi(this);
-        return new Chi(choi.Conjugate());
+        return new QiskitChi(choi.Conjugate());
     }
 
-    public Chi Transpose()
+    public QiskitChi Transpose()
     {
         var choi = new Choi(this);
-        return new Chi(choi.Transpose());
+        return new QiskitChi(choi.Transpose());
     }
 
-    public Chi Adjoint()
+    public QiskitChi Adjoint()
     {
         var choi = new Choi(this);
-        return new Chi(choi.Adjoint());
+        return new QiskitChi(choi.Adjoint());
     }
 
-    public Chi Compose(Chi other, List<int> qargs = null, bool front = false)
+    public QiskitChi Compose(QiskitChi other, List<int> qargs = null, bool front = false)
     {
         if (qargs != null)
         {
-            return new Chi(new SuperOp(this).Compose(other, qargs, front));
+            return new QiskitChi(new SuperOp(this).Compose(other, qargs, front));
         }
         else
         {
-            return new Chi(new Choi(this).Compose(other, front));
+            return new QiskitChi(new Choi(this).Compose(other, front));
         }
     }
 
-    public Chi Tensor(Chi other)
+    public QiskitChi Tensor(QiskitChi other)
     {
         return Tensor(this, other);
     }
 
-    public Chi Expand(Chi other)
+    public QiskitChi Expand(QiskitChi other)
     {
         return Tensor(other, this);
     }
 
-    public static Chi Tensor(Chi a, Chi b)
+    public static QiskitChi Tensor(QiskitChi a, QiskitChi b)
     {
-        var ret = (Chi)a.Clone();
-        ret.Data = np.Kron(a.Data, b.Data);  // Assuming np.Kron is a method for matrix Kronecker product
+        var ret = (QiskitChi)a.Clone();
+        ret.Data = KroneckerProduct(a.Data, b.Data);  // Implementing Kronecker product manually
         return ret;
     }
 
@@ -135,6 +134,29 @@ public class Chi : QuantumChannel
     {
         return this.MemberwiseClone();
     }
-}
 
-// Assuming SuperOp, QuantumState, and Choi are other classes that are involved in quantum channel operations
+    // Kronecker product of two matrices
+    private static CustomComplex[,] KroneckerProduct(CustomComplex[,] a, CustomComplex[,] b)
+    {
+        int aRows = a.GetLength(0), aCols = a.GetLength(1);
+        int bRows = b.GetLength(0), bCols = b.GetLength(1);
+
+        CustomComplex[,] result = new CustomComplex[aRows * bRows, aCols * bCols];
+
+        for (int i = 0; i < aRows; i++)
+        {
+            for (int j = 0; j < aCols; j++)
+            {
+                CustomComplex scalar = a[i, j];
+                for (int k = 0; k < bRows; k++)
+                {
+                    for (int l = 0; l < bCols; l++)
+                    {
+                        result[i * bRows + k, j * bCols + l] = scalar * b[k, l];
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}

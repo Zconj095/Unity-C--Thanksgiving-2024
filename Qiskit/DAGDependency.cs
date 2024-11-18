@@ -12,7 +12,8 @@ public class DAGDependency
     public List<Qubit> Qubits { get; set; }
     public List<Clbit> Clbits { get; set; }
     private double _globalPhase;
-    private Dictionary<string, Dictionary<Tuple, Schedule>> _calibrations;
+    private Dictionary<string, Dictionary<CalibrationKey, Schedule>> _calibrations;
+
     public double Duration { get; set; }
     public string Unit { get; set; }
     public CommutationChecker CommChecker { get; set; }
@@ -27,7 +28,7 @@ public class DAGDependency
         Qubits = new List<Qubit>();
         Clbits = new List<Clbit>();
         _globalPhase = 0.0;
-        _calibrations = new Dictionary<string, Dictionary<Tuple, Schedule>>();
+        _calibrations = new Dictionary<string, Dictionary<CalibrationKey, Schedule>>(); // Using CalibrationKey
         Duration = 0;
         Unit = "dt";
         CommChecker = new CommutationChecker();
@@ -42,10 +43,10 @@ public class DAGDependency
         }
     }
 
-    public Dictionary<string, Dictionary<Tuple, Schedule>> Calibrations
+    public Dictionary<string, Dictionary<CalibrationKey, Schedule>> Calibrations
     {
         get => _calibrations;
-        set => _calibrations = new Dictionary<string, Dictionary<Tuple, Schedule>>(value);
+        set => _calibrations = new Dictionary<string, Dictionary<CalibrationKey, Schedule>>(value);
     }
 
     public PyDAG ToRetworkx()
@@ -291,5 +292,132 @@ public class DAGDependency
         {
             throw new Exception("Replacing the specified node block would introduce a cycle.", ex);
         }
+    }
+}
+
+public class CalibrationKey
+{
+    public int First { get; set; }
+    public int Second { get; set; }
+
+    public CalibrationKey(int first, int second)
+    {
+        First = first;
+        Second = second;
+    }
+
+    // Override Equals and GetHashCode for dictionary key comparison
+    public override bool Equals(object obj)
+    {
+        if (obj is CalibrationKey other)
+        {
+            return First == other.First && Second == other.Second;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(First, Second);
+    }
+}
+
+// Mock Clbit class
+public class Clbit
+{
+    public int Index { get; set; }
+
+    public Clbit(int index)
+    {
+        Index = index;
+    }
+}
+
+// Mock ClassicalRegister class
+public class ClassicalRegister
+{
+    public string Name { get; set; }
+    public List<Clbit> Clbits { get; set; }
+
+    public ClassicalRegister(string name)
+    {
+        Name = name;
+        Clbits = new List<Clbit>();
+    }
+
+    public void AddClbit(Clbit clbit)
+    {
+        Clbits.Add(clbit);
+    }
+}
+
+
+// Mock PyDAG class
+public class PyDAG
+{
+    public List<DAGDepNode> Nodes { get; set; }
+
+    public PyDAG()
+    {
+        Nodes = new List<DAGDepNode>();
+    }
+
+    public int AddNode(DAGDepNode node)
+    {
+        Nodes.Add(node);
+        return Nodes.Count - 1;  // Returning index as node ID
+    }
+
+    public DAGDepNode GetNodeData(int nodeId)
+    {
+        return Nodes[nodeId];
+    }
+
+    public List<int> InEdges(int nodeId)
+    {
+        return Nodes[nodeId].Predecessors.Select(n => n.NodeId).ToList();
+    }
+
+    public List<int> OutEdges(int nodeId)
+    {
+        return Nodes[nodeId].Successors.Select(n => n.NodeId).ToList();
+    }
+
+    public List<int> DirectSuccessors(int nodeId)
+    {
+        return Nodes[nodeId].Successors.Select(n => n.NodeId).ToList();
+    }
+
+    public List<int> DirectPredecessors(int nodeId)
+    {
+        return Nodes[nodeId].Predecessors.Select(n => n.NodeId).ToList();
+    }
+
+    public IEnumerable<DAGDepNode> TopologicalSort()
+    {
+        return Nodes.OrderBy(n => n.NodeId);  // Placeholder for actual topological sort
+    }
+
+    public int Size()
+    {
+        return Nodes.Count;
+    }
+}
+
+// Mock Operation class
+public class Operation
+{
+    public string Name { get; set; }
+    public List<Qubit> Qubits { get; set; }
+
+    public Operation(string name)
+    {
+        Name = name;
+        Qubits = new List<Qubit>();
+    }
+
+    public void AddQubit(Qubit qubit)
+    {
+        Qubits.Add(qubit);
     }
 }

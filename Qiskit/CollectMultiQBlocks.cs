@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -59,7 +58,8 @@ public class CollectMultiQBlocks : AnalysisPass
         bitGroups[set2].Clear();
     }
 
-    public DAGCircuit Run(DAGCircuit dag)
+    // Ensure the signature matches the base class AnalysisPass
+    public override void Run(DAG dag) // Ensure the correct method signature here
     {
         parent.Clear();
         bitGroups.Clear();
@@ -203,7 +203,5 @@ public class CollectMultiQBlocks : AnalysisPass
         }
 
         propertySet["block_list"] = blockList;
-
-        return dag;
     }
 }

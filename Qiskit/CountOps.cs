@@ -8,32 +8,57 @@ public class CountOps : AnalysisPass
     /// </summary>
     public bool Recurse { get; private set; }
 
+    /// <summary>
+    /// Constructor to initialize the CountOps analysis pass.
+    /// </summary>
+    /// <param name="recurse">Indicates whether to recurse through the DAG's operations.</param>
     public CountOps(bool recurse = true)
     {
         Recurse = recurse;
     }
 
+    /// <summary>
+    /// Runs the operation counting on the provided DAG.
+    /// </summary>
+    /// <param name="dag">The DAG (Directed Acyclic Graph) representing the quantum circuit.</param>
     public override void Run(DAG dag)
     {
-        // Assuming propertySet is a dictionary in the base class AnalysisPass
+        // Use the CountOps method of the DAG class to count operations
         propertySet["count_ops"] = dag.CountOps(Recurse);
     }
 }
 
-// Assuming AnalysisPass and DAG are predefined classes:
-public abstract class AnalysisPass
-{
-    protected Dictionary<string, object> propertySet = new Dictionary<string, object>();
-
-    public abstract void Run(DAG dag);
-}
-
 public class DAG
 {
-    // Placeholder method for counting operations
+    // Placeholder for the actual DAG structure; this is where your operations would reside.
+    
+    /// <summary>
+    /// Counts the number of operations in the DAG, optionally recursing through nested operations.
+    /// </summary>
+    /// <param name="recurse">Whether to recurse through nested operations.</param>
+    /// <returns>The total number of operations.</returns>
     public int CountOps(bool recurse)
     {
-        // Implementation goes here
-        return 0; // Replace with actual operation counting logic
+        int opCount = 0;
+
+        // Example logic for counting operations, replace with actual implementation.
+        foreach (var node in this.Nodes)
+        {
+            if (node is DAGOpNode opNode)
+            {
+                opCount++;
+                if (recurse)
+                {
+                    // Recurse if necessary (this is just a placeholder logic)
+                    opCount += opNode.CountSubOperations();
+                }
+            }
+        }
+
+        return opCount;
     }
+
+    // Example property for nodes, assuming DAG contains nodes.
+    public List<DAGNode> Nodes { get; set; }
 }
+
