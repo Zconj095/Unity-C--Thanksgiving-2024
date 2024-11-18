@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cbb128ac74ace3f449336fd9b842d491
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - chakraPrefab: {fileID: 1033953529426088914, guid: 749d4318a396b1648a87af819f4634e3,
+      type: 3}
+  - auraPrefab: {fileID: 7402837048554966082, guid: 277df15370d4add4d91e62e1557a07ff,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6308099944886195324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8766361918835421874}
+  - component: {fileID: 1279601537711046945}
+  m_Layer: 0
+  m_Name: Happiness
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8766361918835421874
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6308099944886195324}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1279601537711046945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6308099944886195324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa40a601172f6f543a1f31884678f0ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EthericBody: {fileID: 4646117070476964348, guid: 536f102955e16e7429a3b3176f5ce4fa,
+    type: 3}
+  EmotionalBody: {fileID: 9121867594288079381, guid: fcdd79d929a85514082b89c74a3f8895,
+    type: 3}
+  MentalBody: {fileID: 9028279828846024631, guid: dd358b60b3818cb4dbcb442b78e49607,
+    type: 3}
+  AstralBody: {fileID: 1784068486834857752, guid: 55413b8ffae4e9540b015af7c2ce088e,
+    type: 3}
+  EthericTemplate: {fileID: 8868944554761304048, guid: aa5e91c8f88e28d41864b7ea872cfa66,
+    type: 3}
+  CelestialBody: {fileID: 2373353365645927767, guid: 0ea841fcaa7dc8146b31b31b27a9c5c4,
+    type: 3}
+  CausalBody: {fileID: 1934325223692134867, guid: 13e73f170739d724fb0ab442423cd01b,
+    type: 3}

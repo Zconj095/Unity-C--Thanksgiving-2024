@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: a18cd19cf1ccbcf4daa2ddacd35e1480
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - resonanceSlider: {fileID: 4052122155336173330, guid: 8e7cd8c2bb47e134e9a1a01e010bae58,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

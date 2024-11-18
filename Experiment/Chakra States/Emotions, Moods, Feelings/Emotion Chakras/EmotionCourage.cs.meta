@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: a899db190d3046c4f92c796be660790d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - RootChakra: {fileID: 3809189260035194123, guid: a000d21ce2482464d9fa420c701069f9,
+      type: 3}
+  - SacralChakra: {fileID: 7566116713701506718, guid: a6f3da2c1a509ac4c90ee7f7576c10b1,
+      type: 3}
+  - SolarPlexusChakra: {fileID: 4116282289120355513, guid: cc6ba15502fe6e3468f3e55796ce40b3,
+      type: 3}
+  - HeartChakra: {fileID: 5913754216500759784, guid: 0a6c99277d2b21246905ce2347e5a9a9,
+      type: 3}
+  - ThroatChakra: {fileID: 2878273341695611434, guid: e8e8276080999b34a8a50b4640597ed3,
+      type: 3}
+  - ThirdEyeChakra: {fileID: 5704506298458316461, guid: 2dce61308eb1e29429f2a3a054101a98,
+      type: 3}
+  - CrownChakra: {fileID: 7597302944518533025, guid: a9aab960f8e719d458dc6cb758c9502b,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
