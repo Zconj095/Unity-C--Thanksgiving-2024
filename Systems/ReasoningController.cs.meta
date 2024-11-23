@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 357aadf61383bd14c91ce0d24ea27f91
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - temporalMemory: {fileID: 1235871503411687428, guid: dd1c9b0065c12dc4d8e0ff37dc73057c, type: 3}
+  - cognitiveState: {fileID: 1103201193094882306, guid: 598b427881ed54d41b13ef29449c474f, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

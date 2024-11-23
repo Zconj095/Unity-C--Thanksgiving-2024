@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: fcbe217c38ebb604898949530eb5c938
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - corticalActivity: {fileID: 3326675852289733401, guid: 1b3b5d0530a732a4e9e722177836e4dd, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

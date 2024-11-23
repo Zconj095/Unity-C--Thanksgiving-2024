@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: b2852e9300b077c45a51c6b5dc7d052c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cognitiveState: {fileID: 1103201193094882306, guid: 598b427881ed54d41b13ef29449c474f, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

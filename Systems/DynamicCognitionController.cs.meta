@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a55a8cf8d79de444fb407fa0a2668a1a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - spatialCognition: {fileID: 5567931712819487879, guid: 7c49310569c71924f96658bf70a19c13, type: 3}
+  - temporalFeedback: {fileID: 4617359828446470818, guid: fa917b2439ad08b4d9553ff648cdd043, type: 3}
+  - cognitiveState: {fileID: 1103201193094882306, guid: 598b427881ed54d41b13ef29449c474f, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
