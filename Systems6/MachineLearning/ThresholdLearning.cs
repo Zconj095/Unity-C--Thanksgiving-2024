@@ -105,12 +105,4 @@ namespace EdgeLoreMachineLearning
         }
     }
 
-    /// <summary>
-    ///   Enumeration for comparison types in threshold-based classifiers.
-    /// </summary>
-    public enum ComparisonKind
-    {
-        LessThan,
-        GreaterThan
-    }
 }

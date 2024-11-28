@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace EdgeLoreMachineLearning.Boosting
+namespace EdgeLoreMachineLearning
 {
     /// <summary>
     ///   Weighted weak classifier.
